@@ -40,7 +40,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Tab = "portofoliu" | "rapoarte" | "plati" | "produse" | "mai-multe";
-type AppView = "tabs" | "account";
+type AppView = "tabs" | "account" | "transaction";
 type TransferKind = "client" | "iban";
 type Transaction = {
   id: string;
@@ -49,11 +49,15 @@ type Transaction = {
   amount: number;
   date: string;
   type: "in" | "out" | "pending";
+  recipientName?: string;
+  recipientIban?: string;
+  details?: string;
+  reference?: string;
 };
 
 const CURRENT_ACCOUNT_IBAN = "RO36HOMB0000992005123456789";
 const INITIAL_BALANCE = 128_744.16;
-const DEMO_STATE_KEY = "home-bank-demo-state-v3";
+const DEMO_STATE_KEY = "home-bank-demo-state-v4";
 
 const DEMO_TRANSACTIONS: Transaction[] = [
   {
@@ -77,7 +81,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "24 IUL · 19:08",
+    date: "23 IUL · 19:08",
     type: "in",
   },
   {
@@ -85,7 +89,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "24 IUL · 16:35",
+    date: "22 IUL · 16:35",
     type: "in",
   },
   {
@@ -93,7 +97,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "24 IUL · 18:11",
+    date: "21 IUL · 18:11",
     type: "in",
   },
   {
@@ -101,7 +105,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "24 IUL · 15:52",
+    date: "20 IUL · 15:52",
     type: "in",
   },
 ];
@@ -292,7 +296,7 @@ function Login({
       if (!supabase) {
         if (identity.trim() && password.length >= 6) {
           localStorage.setItem("black-finance-demo-session", "active");
-          onSuccess("Constantin Cătălin");
+          onSuccess("Constantin Catalin");
           return;
         }
         throw new Error("Completează utilizatorul și o parolă de minimum 6 caractere.");
@@ -321,7 +325,11 @@ function Login({
         .select("full_name")
         .eq("user_id", data.user.id)
         .maybeSingle();
-      onSuccess(profile?.full_name || data.user.user_metadata?.full_name || "Client Home Bank");
+      onSuccess(
+        profile?.full_name ||
+          data.user.user_metadata?.full_name ||
+          "Constantin Catalin",
+      );
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Autentificarea a eșuat.");
     } finally {
@@ -359,7 +367,7 @@ function Login({
       if (!data.session) {
         throw new Error("Sesiunea a expirat. Autentifică-te din nou cu parola.");
       }
-      onSuccess("Constantin Cătălin");
+      onSuccess("Constantin Catalin");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Amprenta nu a putut fi verificată.");
     }
@@ -376,7 +384,7 @@ function Login({
       <section className="login-card">
         <p className="eyebrow">ACCES SECURIZAT</p>
         <h1>Bine ai venit.</h1>
-        <p>Accesează portofoliul financiar ING.</p>
+        <p>Accesează portofoliul financiar Home Bank.</p>
         <form onSubmit={passwordLogin}>
           <label>
             Utilizator sau e-mail
@@ -414,7 +422,7 @@ function Login({
           Intră cu amprenta
         </button>
         <p className="demo-hint">
-          
+          Demo fără Supabase: introdu orice utilizator și o parolă de minimum 6
           caractere.
         </p>
       </section>
@@ -686,10 +694,12 @@ function ReportsScreen({
 function PaymentsScreen({
   transactions,
   onOpenTransfer,
+  onOpenTransaction,
   onLogout,
 }: {
   transactions: Transaction[];
   onOpenTransfer: (kind: TransferKind) => void;
+  onOpenTransaction: (transaction: Transaction) => void;
   onLogout: () => void;
 }) {
   const pendingTransfers = transactions.filter(
@@ -733,7 +743,7 @@ function PaymentsScreen({
             <span className="avatar">DC</span>
             <span>
               <strong>Dascălu Constantin Cătălin</strong>
-              <small>Client ING · transfer instant</small>
+              <small>Client Home Bank · transfer instant</small>
             </span>
             <ChevronRight />
           </button>
@@ -742,7 +752,7 @@ function PaymentsScreen({
               <ContactRound />
             </span>
             <span>
-              <strong>Contact ING</strong>
+              <strong>Contact Home Bank</strong>
               <small>Contact rapid</small>
             </span>
             <ChevronRight />
@@ -752,7 +762,7 @@ function PaymentsScreen({
               <Send />
             </span>
             <span>
-              <strong>ING Go</strong>
+              <strong>Home Bank Go</strong>
               <small>Plăți și beneficii</small>
             </span>
             <ChevronRight />
@@ -768,17 +778,24 @@ function PaymentsScreen({
         {pendingTransfers.length ? (
           <div className="pending-transfers-list">
             {pendingTransfers.map((transaction) => (
-              <article className="pending-transfer-row" key={transaction.id}>
+              <button
+                className="pending-transfer-row"
+                key={transaction.id}
+                onClick={() => onOpenTransaction(transaction)}
+              >
                 <span className="round-icon amber">
                   <Clock3 size={20} />
                 </span>
                 <div>
-                  <strong>{transaction.title}</strong>
+                  <strong>
+                    {transaction.recipientName || transaction.title}
+                  </strong>
                   <small>{transaction.subtitle}</small>
                   <time>{transaction.date}</time>
                 </div>
                 <b>{money(Math.abs(transaction.amount))} RON</b>
-              </article>
+                <ChevronRight size={18} />
+              </button>
             ))}
           </div>
         ) : (
@@ -786,14 +803,84 @@ function PaymentsScreen({
             <Check size={22} />
             <div>
               <strong>Nu există transferuri în așteptare</strong>
-              <small>Transferurile inițiate vor apărea aici.</small>
+              <small>Plățile inițiate și nefinalizate vor apărea aici.</small>
             </div>
           </div>
         )}
-        <p className="pending-settlement-note">
-          Transferurile internaționale pot dura între 3 și 5 zile lucrătoare.
-          Sumele sunt rezervate și scăzute imediat din soldul disponibil.
+      </section>
+    </>
+  );
+}
+
+function TransactionDetailScreen({
+  transaction,
+  onBack,
+  onLogout,
+}: {
+  transaction: Transaction;
+  onBack: () => void;
+  onLogout: () => void;
+}) {
+  return (
+    <>
+      <div className="detail-header">
+        <button className="back-button" onClick={onBack} aria-label="Înapoi">
+          <ArrowLeft size={23} />
+        </button>
+        <Header
+          title="Detalii plată"
+          subtitle="Operațiune Home Bank"
+          onLogout={onLogout}
+        />
+      </div>
+
+      <section className="payment-detail-card">
+        <div className="pending-status-icon">
+          <Clock3 size={34} />
+        </div>
+        <p className="eyebrow">PLATĂ ÎN CURS DE PROCESARE</p>
+        <h2>{money(Math.abs(transaction.amount))} RON</h2>
+        <p className="payment-detail-beneficiary">
+          {transaction.recipientName || transaction.title}
         </p>
+
+        <div className="payment-detail-list">
+          <div>
+            <span>Nume beneficiar</span>
+            <strong>{transaction.recipientName || "Beneficiar"}</strong>
+          </div>
+          {transaction.recipientIban && (
+            <div>
+              <span>IBAN beneficiar</span>
+              <strong className="iban-value">{transaction.recipientIban}</strong>
+            </div>
+          )}
+          <div>
+            <span>Detalii</span>
+            <strong>
+              {transaction.details || transaction.subtitle || "Transfer Home Bank"}
+            </strong>
+          </div>
+          <div>
+            <span>Data inițierii</span>
+            <strong>{transaction.date}</strong>
+          </div>
+          <div>
+            <span>Referință</span>
+            <strong>{transaction.reference || transaction.id.slice(0, 8).toUpperCase()}</strong>
+          </div>
+        </div>
+
+        <div className="processing-notice">
+          <Clock3 size={21} />
+          <div>
+            <strong>Transferul este în curs de procesare</strong>
+            <p>
+              Transferul poate dura între 3 și 5 zile lucrătoare. Vei putea
+              urmări statusul actualizat în această pagină.
+            </p>
+          </div>
+        </div>
       </section>
     </>
   );
@@ -867,7 +954,7 @@ function MoreScreen({
   const tiles = [
     { icon: ContactRound, title: "Contact Home Bank", subtitle: "" },
     { icon: UserRound, title: "Datele mele", subtitle: "" },
-    { icon: Send, title: "ING Go", subtitle: "Plăți și beneficii" },
+    { icon: Send, title: "Home Bank Go", subtitle: "Plăți și beneficii" },
     { icon: LockKeyhole, title: "Securitate și login", subtitle: "" },
   ];
   return (
@@ -920,6 +1007,7 @@ function TransferSheet({
   supabase: SupabaseClient | null;
 }) {
   const [step, setStep] = useState<"form" | "pending">("form");
+  const [recipientName, setRecipientName] = useState("");
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -939,8 +1027,12 @@ function TransferSheet({
       setMessage("Sold disponibil insuficient.");
       return;
     }
+    if (recipientName.trim().length < 2) {
+      setMessage("Introdu numele beneficiarului.");
+      return;
+    }
     if (kind === "iban" && !isValidIban(recipient)) {
-      setMessage("Introdu un IBAN internațional valid.");
+      setMessage("Introdu un IBAN valid.");
       return;
     }
     if (kind === "client" && recipient.trim().length < 3) {
@@ -959,6 +1051,7 @@ function TransferSheet({
           p_transfer_type: kind === "client" ? "internal" : "external_iban",
           p_recipient_identifier: kind === "client" ? normalizedRecipient : null,
           p_recipient_iban: kind === "iban" ? normalizedRecipient : null,
+          p_recipient_name: recipientName.trim(),
           p_amount: numericAmount,
           p_description: description.trim() || "Transfer Home Bank",
           p_idempotency_key: idempotencyKey,
@@ -969,17 +1062,18 @@ function TransferSheet({
       onComplete(
         {
           id: idempotencyKey,
-          title:
-            kind === "client"
-              ? `TRANSFER CĂTRE ${recipient.toUpperCase()}`
-              : `TRANSFER IBAN ${normalizedRecipient.slice(-6)}`,
+          title: `TRANSFER CĂTRE ${recipientName.trim().toUpperCase()}`,
           subtitle:
             kind === "client"
-              ? "Transfer intern ING"
-              : "Transfer extern · în așteptare",
+              ? "Transfer intern Home Bank"
+              : "Plată în curs de procesare",
           amount: -numericAmount,
           date: "ASTĂZI",
           type: kind === "client" ? "out" : "pending",
+          recipientName: recipientName.trim(),
+          recipientIban: kind === "iban" ? normalizedRecipient : undefined,
+          details: description.trim() || "Transfer Home Bank",
+          reference: idempotencyKey.slice(0, 8).toUpperCase(),
         },
         numericAmount,
       );
@@ -1014,7 +1108,7 @@ function TransferSheet({
                 ? "STATUS TRANSFER"
                 : kind === "client"
                   ? "TRANSFER INTERN"
-                  : "TRANSFER INTERNAȚIONAL"}
+                  : "TRANSFER CĂTRE IBAN"}
             </p>
             <h2>{step === "pending" ? "Confirmare" : "Transfer nou"}</h2>
           </div>
@@ -1029,6 +1123,15 @@ function TransferSheet({
               <strong>{money(balance)} RON</strong>
             </div>
             <form onSubmit={submit}>
+              <label>
+                Nume beneficiar
+                <input
+                  autoComplete="name"
+                  value={recipientName}
+                  onChange={(event) => setRecipientName(event.target.value)}
+                  placeholder="Numele complet al beneficiarului"
+                />
+              </label>
               <label>
                 {kind === "client" ? "Utilizator sau e-mail client" : "IBAN beneficiar"}
                 <input
@@ -1069,7 +1172,8 @@ function TransferSheet({
               </button>
             </form>
             <p className="transfer-disclaimer">
-              Acceptăm IBAN-uri valide. 
+              Introdu un IBAN valid pentru o plată locală sau externă.
+              Operațiunea este înregistrată în registrul securizat Home Bank.
             </p>
           </>
         ) : (
@@ -1082,16 +1186,19 @@ function TransferSheet({
             </p>
             <h3>{money(submittedAmount)} RON</h3>
             <p className="pending-recipient">
-              {kind === "iban" ? normalizeIban(recipient) : recipient}
+              {recipientName.trim()}
             </p>
+            {kind === "iban" && (
+              <p className="pending-recipient-iban">{normalizeIban(recipient)}</p>
+            )}
             {kind === "iban" && (
               <div className="international-notice">
                 <Clock3 size={21} />
                 <div>
-                  <strong>Procesare internațională</strong>
+                  <strong>Plată în curs de procesare</strong>
                   <p>
-                    Transferurile internaționale pot dura între 3 și 5 zile
-                    lucrătoare.
+                    Transferul a fost înregistrat. Deschide plata din lista de
+                    transferuri în așteptare pentru detalii complete.
                   </p>
                 </div>
               </div>
@@ -1123,6 +1230,8 @@ function MobileApp({
   const [view, setView] = useState<AppView>("tabs");
   const [balance, setBalance] = useState(INITIAL_BALANCE);
   const [transactions, setTransactions] = useState<Transaction[]>(DEMO_TRANSACTIONS);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
   const [transfer, setTransfer] = useState<TransferKind | null>(null);
   const [toast, setToast] = useState("");
   const [biometricMessage, setBiometricMessage] = useState("");
@@ -1162,30 +1271,58 @@ function MobileApp({
         .maybeSingle();
       const { data: rows } = await supabase
         .from("finance_transactions")
-        .select("id,title,description,amount,direction,status,created_at")
+        .select(
+          "id,transfer_id,title,description,amount,direction,status,created_at",
+        )
         .eq("owner_id", userData.user.id)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      const { data: transferRows } = await supabase
+        .from("finance_transfers")
+        .select(
+          "id,recipient_identifier,recipient_iban,recipient_name,description,idempotency_key",
+        )
+        .eq("sender_id", userData.user.id)
         .order("created_at", { ascending: false })
         .limit(30);
       if (!active) return;
       if (account) setBalance(Number(account.available_balance));
       if (rows?.length) {
+        const transferById = new Map(
+          (transferRows || []).map((transferRow) => [
+            transferRow.id,
+            transferRow,
+          ]),
+        );
         setTransactions(
-          rows.map((row) => ({
-            id: row.id,
-            title: row.title,
-            subtitle: row.description || "Tranzacție",
-            amount: Number(row.amount) * (row.direction === "debit" ? -1 : 1),
-            date: new Date(row.created_at).toLocaleDateString("ro-RO", {
-              day: "2-digit",
-              month: "short",
-            }),
-            type:
-              row.status === "pending"
-                ? "pending"
-                : row.direction === "credit"
-                  ? "in"
-                  : "out",
-          })),
+          rows.map((row) => {
+            const transfer = row.transfer_id
+              ? transferById.get(row.transfer_id)
+              : undefined;
+            return {
+              id: row.id,
+              title: row.title,
+              subtitle: row.description || "Tranzacție",
+              amount:
+                Number(row.amount) * (row.direction === "debit" ? -1 : 1),
+              date: new Date(row.created_at).toLocaleDateString("ro-RO", {
+                day: "2-digit",
+                month: "short",
+              }),
+              type:
+                row.status === "pending"
+                  ? "pending"
+                  : row.direction === "credit"
+                    ? "in"
+                    : "out",
+              recipientName: transfer?.recipient_name || undefined,
+              recipientIban: transfer?.recipient_iban || undefined,
+              details: transfer?.description || row.description || undefined,
+              reference:
+                transfer?.idempotency_key?.slice(0, 8).toUpperCase() ||
+                undefined,
+            } satisfies Transaction;
+          }),
         );
       }
     })();
@@ -1253,6 +1390,19 @@ function MobileApp({
   }
 
   const content = (() => {
+    if (view === "transaction" && selectedTransaction) {
+      return (
+        <TransactionDetailScreen
+          transaction={selectedTransaction}
+          onBack={() => {
+            setSelectedTransaction(null);
+            setView("tabs");
+            setTab("plati");
+          }}
+          onLogout={onLogout}
+        />
+      );
+    }
     if (view === "account") {
       return (
         <AccountDetailScreen
@@ -1279,6 +1429,10 @@ function MobileApp({
         <PaymentsScreen
           transactions={transactions}
           onOpenTransfer={setTransfer}
+          onOpenTransaction={(transaction) => {
+            setSelectedTransaction(transaction);
+            setView("transaction");
+          }}
           onLogout={onLogout}
         />
       );
@@ -1315,6 +1469,7 @@ function MobileApp({
             className={tab === id ? "active" : ""}
             onClick={() => {
               setView("tabs");
+              setSelectedTransaction(null);
               setTab(id);
             }}
           >
@@ -1350,7 +1505,7 @@ export default function FinanceApp() {
     "ios" | "android" | "other"
   >("other");
   const [authenticated, setAuthenticated] = useState(false);
-  const [profileName, setProfileName] = useState("Constantin Cătălin");
+  const [profileName, setProfileName] = useState("Constantin Catalin");
   const supabase = useMemo(() => getSupabase(), []);
 
   useEffect(() => {
