@@ -77,7 +77,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "23 IUL · 19:08",
+    date: "24 IUL · 19:08",
     type: "in",
   },
   {
@@ -85,7 +85,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "22 IUL · 16:35",
+    date: "24 IUL · 16:35",
     type: "in",
   },
   {
@@ -93,7 +93,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "21 IUL · 18:11",
+    date: "24 IUL · 18:11",
     type: "in",
   },
   {
@@ -101,7 +101,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "20 IUL · 15:52",
+    date: "24 IUL · 15:52",
     type: "in",
   },
 ];
@@ -376,7 +376,7 @@ function Login({
       <section className="login-card">
         <p className="eyebrow">ACCES SECURIZAT</p>
         <h1>Bine ai venit.</h1>
-        <p>Accesează portofoliul financiar Home Bank.</p>
+        <p>Accesează portofoliul financiar ING.</p>
         <form onSubmit={passwordLogin}>
           <label>
             Utilizator sau e-mail
@@ -414,7 +414,7 @@ function Login({
           Intră cu amprenta
         </button>
         <p className="demo-hint">
-          Demo fără Supabase: introdu orice utilizator și o parolă de minimum 6
+          
           caractere.
         </p>
       </section>
@@ -733,7 +733,7 @@ function PaymentsScreen({
             <span className="avatar">DC</span>
             <span>
               <strong>Dascălu Constantin Cătălin</strong>
-              <small>Client Home Bank · transfer instant</small>
+              <small>Client ING · transfer instant</small>
             </span>
             <ChevronRight />
           </button>
@@ -742,7 +742,7 @@ function PaymentsScreen({
               <ContactRound />
             </span>
             <span>
-              <strong>Contact Home Bank</strong>
+              <strong>Contact ING</strong>
               <small>Contact rapid</small>
             </span>
             <ChevronRight />
@@ -752,7 +752,7 @@ function PaymentsScreen({
               <Send />
             </span>
             <span>
-              <strong>Home Bank Go</strong>
+              <strong>ING Go</strong>
               <small>Plăți și beneficii</small>
             </span>
             <ChevronRight />
@@ -786,7 +786,7 @@ function PaymentsScreen({
             <Check size={22} />
             <div>
               <strong>Nu există transferuri în așteptare</strong>
-              <small>Transferurile internaționale inițiate vor apărea aici.</small>
+              <small>Transferurile inițiate vor apărea aici.</small>
             </div>
           </div>
         )}
@@ -867,7 +867,7 @@ function MoreScreen({
   const tiles = [
     { icon: ContactRound, title: "Contact Home Bank", subtitle: "" },
     { icon: UserRound, title: "Datele mele", subtitle: "" },
-    { icon: Send, title: "Home Bank Go", subtitle: "Plăți și beneficii" },
+    { icon: Send, title: "ING Go", subtitle: "Plăți și beneficii" },
     { icon: LockKeyhole, title: "Securitate și login", subtitle: "" },
   ];
   return (
@@ -975,7 +975,7 @@ function TransferSheet({
               : `TRANSFER IBAN ${normalizedRecipient.slice(-6)}`,
           subtitle:
             kind === "client"
-              ? "Transfer intern Home Bank"
+              ? "Transfer intern ING"
               : "Transfer extern · în așteptare",
           amount: -numericAmount,
           date: "ASTĂZI",
@@ -1069,9 +1069,7 @@ function TransferSheet({
               </button>
             </form>
             <p className="transfer-disclaimer">
-              Acceptăm IBAN-uri internaționale valide. Transferurile sunt
-              înregistrate în MVP și necesită integrarea unui furnizor bancar
-              autorizat pentru decontare reală.
+              Acceptăm IBAN-uri valide. 
             </p>
           </>
         ) : (
