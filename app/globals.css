@@ -63,6 +63,7 @@ input:focus-visible {
 }
 
 .app-mark {
+  overflow: hidden;
   display: grid;
   width: 72px;
   height: 72px;
@@ -73,6 +74,12 @@ input:focus-visible {
   font-weight: 900;
   font-size: 25px;
   box-shadow: 0 18px 38px rgba(255, 91, 20, 0.25);
+}
+
+.app-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .pulse {
@@ -475,6 +482,14 @@ label {
   padding: 18px 16px 10px;
 }
 
+.account-card-button {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .account-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -490,6 +505,12 @@ label {
   border-radius: 50%;
   background: #f5f5f5;
   font-size: 20px;
+}
+
+.flag.large {
+  width: 42px;
+  height: 42px;
+  font-size: 23px;
 }
 
 .account-row div:nth-child(2),
@@ -686,8 +707,163 @@ small {
   padding: 13px;
 }
 
+.report-account-button {
+  width: 100%;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .report-account b {
   font-size: 12px;
+}
+
+.detail-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 11px;
+}
+
+.detail-header .app-header {
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.detail-header .header-actions {
+  margin-left: 8px;
+}
+
+.back-button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.account-hero {
+  overflow: hidden;
+  position: relative;
+  border-radius: 24px;
+  padding: 22px;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(255, 255, 255, 0.26), transparent 31%),
+    linear-gradient(145deg, #ff6d28, #f14b00);
+  color: #fff;
+  box-shadow: 0 22px 44px rgba(255, 91, 20, 0.25);
+}
+
+.account-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-hero-top span {
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.13);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.account-hero > p {
+  margin: 30px 0 6px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+}
+
+.account-hero > strong {
+  display: block;
+  font-size: clamp(31px, 9vw, 42px);
+  letter-spacing: -0.055em;
+}
+
+.account-iban {
+  display: grid;
+  gap: 5px;
+  margin-top: 27px;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  padding-top: 17px;
+}
+
+.account-iban small {
+  color: rgba(255, 255, 255, 0.67);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.account-iban b {
+  overflow: hidden;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+}
+
+.account-transfer-button {
+  margin-top: 20px;
+  background: #fff;
+  color: var(--orange);
+}
+
+.account-history {
+  margin-top: 31px;
+}
+
+.account-history .section-title small {
+  font-size: 11px;
+}
+
+.deposit-list {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  background: #fff;
+}
+
+.deposit-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--line);
+  padding: 15px 13px;
+}
+
+.deposit-row:last-child {
+  border-bottom: 0;
+}
+
+.deposit-row > div:nth-child(2) {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.deposit-row strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deposit-row small,
+.deposit-row time {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.deposit-row b {
+  color: var(--green);
+  font-size: 11px;
+  white-space: nowrap;
 }
 
 .transaction-list {
@@ -1196,6 +1372,103 @@ small {
   font-size: 10px;
   line-height: 1.5;
   text-align: center;
+}
+
+.pending-transfer {
+  display: grid;
+  justify-items: center;
+  padding: 22px 2px 4px;
+  text-align: center;
+}
+
+.pending-status-icon,
+.success-status-icon {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+  margin-bottom: 23px;
+  border-radius: 50%;
+}
+
+.pending-status-icon {
+  background: #fff3dc;
+  color: #d18400;
+  box-shadow: 0 0 0 10px rgba(255, 193, 75, 0.11);
+}
+
+.success-status-icon {
+  background: #eef8e9;
+  color: var(--green);
+  box-shadow: 0 0 0 10px rgba(85, 165, 47, 0.1);
+}
+
+.pending-transfer h3 {
+  margin: 12px 0 5px;
+  font-size: 39px;
+  letter-spacing: -0.055em;
+}
+
+.pending-recipient {
+  max-width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.international-notice {
+  display: grid;
+  width: 100%;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+  margin-top: 29px;
+  border: 1px solid #efd59d;
+  border-radius: 16px;
+  padding: 15px;
+  background: #fffaf0;
+  color: #916400;
+  text-align: left;
+}
+
+.international-notice svg {
+  margin-top: 2px;
+}
+
+.international-notice strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.international-notice p {
+  margin: 0;
+  color: #7c6b45;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.transfer-reference {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--wash);
+}
+
+.transfer-reference span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.transfer-reference strong {
+  font-size: 12px;
+  letter-spacing: 0.07em;
 }
 
 .toast {

@@ -1,9 +1,8 @@
-const CACHE = "home-bank-v4-icons";
+const CACHE = "home-bank-v5-white-lion";
 const CORE = [
   "/",
   "/manifest.webmanifest",
   "/favicon.ico",
-  "/favicon.svg",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/icon-maskable-512.png",
