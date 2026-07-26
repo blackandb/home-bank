@@ -1,5 +1,11 @@
-const CACHE = "black-finance-v1";
-const CORE = ["/", "/manifest.webmanifest"];
+const CACHE = "black-finance-v2";
+const CORE = [
+  "/",
+  "/manifest.webmanifest",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/apple-touch-icon.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE)));

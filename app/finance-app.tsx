@@ -13,6 +13,7 @@ import {
   ContactRound,
   CreditCard,
   Download,
+  ExternalLink,
   FileText,
   Fingerprint,
   Gift,
@@ -144,10 +145,23 @@ function DesktopBlocked() {
 function InstallScreen({
   onInstall,
   canInstall,
+  platform,
 }: {
   onInstall: () => void;
   canInstall: boolean;
+  platform: "ios" | "android" | "other";
 }) {
+  const [showHelp, setShowHelp] = useState(!canInstall);
+
+  function requestInstall() {
+    if (canInstall) {
+      setShowHelp(false);
+      onInstall();
+      return;
+    }
+    setShowHelp(true);
+  }
+
   return (
     <main className="install-screen">
       <div className="install-card">
@@ -158,14 +172,39 @@ function InstallScreen({
           Instalează BLACK& Finance pe ecranul principal pentru acces securizat,
           notificări și autentificare biometrică.
         </p>
-        {canInstall ? (
-          <button className="primary-button" onClick={onInstall}>
-            <Download size={20} /> Instalează aplicația
-          </button>
-        ) : (
+        <button className="primary-button install-button" onClick={requestInstall}>
+          <Download size={20} /> Instalează aplicația
+        </button>
+        <p className="install-status" aria-live="polite">
+          {canInstall
+            ? "Apasă butonul pentru a deschide instalarea securizată."
+            : "Browserul tău folosește instalarea din meniul principal."}
+        </p>
+        {showHelp && (
           <div className="ios-help">
-            <strong>Pe iPhone:</strong> apasă Partajare, apoi „Adăugați la
-            ecranul principal”.
+            {platform === "ios" ? (
+              <>
+                <strong>Instalare pe iPhone sau iPad</strong>
+                <ol>
+                  <li>Deschide pagina în Safari.</li>
+                  <li>Apasă butonul Partajare din bara browserului.</li>
+                  <li>Alege „Adăugați la ecranul principal”, apoi „Adăugați”.</li>
+                </ol>
+              </>
+            ) : (
+              <>
+                <strong>Instalare pe Android</strong>
+                <ol>
+                  <li>Deschide meniul browserului.</li>
+                  <li>Alege „Instalează aplicația” sau „Adaugă pe ecranul principal”.</li>
+                  <li>Confirmă instalarea BLACK& Finance.</li>
+                </ol>
+              </>
+            )}
+            <div className="browser-menu-hint">
+              <ExternalLink size={17} />
+              Dacă opțiunea nu apare imediat, reîncarcă pagina o singură dată.
+            </div>
           </div>
         )}
         <div className="secure-line">
@@ -1056,6 +1095,9 @@ export default function FinanceApp() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
+  const [installPlatform, setInstallPlatform] = useState<
+    "ios" | "android" | "other"
+  >("other");
   const [authenticated, setAuthenticated] = useState(false);
   const [profileName, setProfileName] = useState("Constantin Cătălin");
   const supabase = useMemo(() => getSupabase(), []);
@@ -1063,6 +1105,8 @@ export default function FinanceApp() {
   useEffect(() => {
     const preview = new URLSearchParams(window.location.search).get("preview") === "1";
     const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const android = /Android/i.test(navigator.userAgent);
     const narrow = window.matchMedia("(max-width: 900px)").matches;
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
@@ -1071,14 +1115,23 @@ export default function FinanceApp() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDesktop(!preview && !mobileUa && !narrow);
     setIsStandalone(standalone || preview);
+    setInstallPlatform(ios ? "ios" : android ? "android" : "other");
 
     const handler = (event: Event) => {
       event.preventDefault();
       setInstallPrompt(event);
     };
     window.addEventListener("beforeinstallprompt", handler);
+    const installedHandler = () => {
+      setIsStandalone(true);
+      setInstallPrompt(null);
+    };
+    window.addEventListener("appinstalled", installedHandler);
     if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/sw.js");
+      void navigator.serviceWorker
+        .register("/sw.js", { scope: "/" })
+        .then(() => navigator.serviceWorker.ready)
+        .catch(() => undefined);
     }
 
     void (async () => {
@@ -1099,7 +1152,10 @@ export default function FinanceApp() {
       setReady(true);
     })();
 
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("appinstalled", installedHandler);
+    };
   }, [supabase]);
 
   async function install() {
@@ -1128,7 +1184,13 @@ export default function FinanceApp() {
   }
   if (isDesktop) return <DesktopBlocked />;
   if (!isStandalone) {
-    return <InstallScreen onInstall={install} canInstall={Boolean(installPrompt)} />;
+    return (
+      <InstallScreen
+        onInstall={install}
+        canInstall={Boolean(installPrompt)}
+        platform={installPlatform}
+      />
+    );
   }
   if (!authenticated) {
     return <Login onSuccess={(name) => { setProfileName(name); setAuthenticated(true); }} supabase={supabase} />;

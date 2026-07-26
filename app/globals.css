@@ -19,7 +19,7 @@
 }
 
 html {
-  background: #f3f3f4;
+  background: #ffffff;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color: transparent;
@@ -28,7 +28,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: #f3f3f4;
+  background: #ffffff;
 }
 
 button,
@@ -92,19 +92,19 @@ input:focus-visible {
   place-items: center;
   padding: 32px;
   background:
-    radial-gradient(circle at 50% 20%, rgba(255, 91, 20, 0.14), transparent 30%),
-    #0c0c0d;
-  color: #fff;
+    radial-gradient(circle at 50% 15%, rgba(255, 91, 20, 0.1), transparent 34%),
+    #ffffff;
+  color: var(--ink);
 }
 
 .blocked-card,
 .install-card {
   width: min(100%, 510px);
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  border: 1px solid var(--line);
   border-radius: 34px;
   padding: 42px;
-  background: rgba(24, 24, 26, 0.86);
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 34px 90px rgba(33, 33, 35, 0.1);
 }
 
 .blocked-card h1,
@@ -117,7 +117,7 @@ input:focus-visible {
 
 .blocked-card > p:not(.eyebrow),
 .install-card > p:not(.eyebrow) {
-  color: #aaa;
+  color: var(--muted);
   font-size: 17px;
   line-height: 1.65;
 }
@@ -158,7 +158,7 @@ input:focus-visible {
   align-items: center;
   gap: 9px;
   margin-top: 28px;
-  color: #aaa;
+  color: var(--muted);
   font-size: 13px;
 }
 
@@ -166,8 +166,10 @@ input:focus-visible {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #0c0c0d;
-  color: white;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255, 91, 20, 0.09), transparent 32%),
+    #ffffff;
+  color: var(--ink);
 }
 
 .install-card .app-mark {
@@ -176,11 +178,55 @@ input:focus-visible {
 
 .ios-help {
   margin-top: 26px;
+  border: 1px solid var(--line);
   border-radius: 18px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.07);
-  color: #bbb;
+  background: #fafafa;
+  color: #4f4f53;
   line-height: 1.55;
+}
+
+.ios-help strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.ios-help ol {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 21px;
+  font-size: 13px;
+}
+
+.browser-menu-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.browser-menu-hint svg {
+  flex: 0 0 auto;
+  color: var(--orange);
+}
+
+.install-button {
+  box-shadow: 0 14px 30px rgba(255, 91, 20, 0.2);
+}
+
+.install-status {
+  margin: 11px 0 0 !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  text-align: center;
 }
 
 .primary-button {
