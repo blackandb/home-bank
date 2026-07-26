@@ -37,6 +37,7 @@ import {
   X,
 } from "lucide-react";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Tab = "portofoliu" | "rapoarte" | "plati" | "produse" | "mai-multe";
@@ -171,9 +172,14 @@ function base64ToBytes(value: string) {
 
 function Brand() {
   return (
-    <div className="brand" aria-label="Home Bank">
-      <span>HOME</span>
-      <b>BANK</b>
+    <div className="brand">
+      <Image
+        src="/brand/ing-logo.png"
+        alt="ING"
+        width={144}
+        height={36}
+        priority
+      />
     </div>
   );
 }

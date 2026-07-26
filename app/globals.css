@@ -142,16 +142,16 @@ input:focus-visible {
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  font-size: 27px;
-  font-weight: 900;
-  letter-spacing: -0.035em;
+  min-width: 0;
+  align-items: center;
+  line-height: 0;
 }
 
-.brand b {
-  color: var(--orange);
-  font-weight: 900;
+.brand img {
+  display: block;
+  width: clamp(112px, 32vw, 144px);
+  height: auto;
+  object-fit: contain;
 }
 
 .eyebrow {
