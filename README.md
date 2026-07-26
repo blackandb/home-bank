@@ -14,6 +14,13 @@ Un MVP financiar mobile-only în limba română, inspirat de interfața furnizat
 - interfață blocată pe desktop;
 - mod demo local când Supabase nu este configurat.
 
+## Compatibilitate cu repository-ul existent
+
+Home Bank folosește Supabase, nu Drizzle ORM. Arhiva include un fișier
+`drizzle.config.ts` fără importuri, care suprascrie în siguranță configurația
+Drizzle rămasă din versiunile vechi ale repository-ului. Nu instala
+`drizzle-kit`; nu este necesar pentru această aplicație.
+
 ## Limită importantă
 
 Acesta este un **application ledger MVP**, nu o bancă și nu un procesator de
