@@ -4,9 +4,11 @@ Un MVP financiar mobile-only în limba română, inspirat de interfața furnizat
 
 - autentificare cu utilizator/e-mail și parolă prin Supabase Auth;
 - deblocare biometrică WebAuthn pe dispozitiv după prima autentificare;
-- sold inițial demonstrativ de **130.000 RON**;
+- sold inițial demonstrativ de **128.744,16 RON**;
 - transfer intern atomic între doi clienți Home Bank;
-- transfer către IBAN în starea **În așteptare**;
+- transfer către orice IBAN internațional valid în starea **În așteptare**;
+- rezervarea imediată a sumei și scăderea ei din soldul disponibil;
+- registru persistent pentru toate transferurile în așteptare;
 - portofoliu, rapoarte, plăți, produse și setări;
 - PWA instalabilă cu service worker și manifest;
 - interfață blocată pe desktop;
@@ -23,7 +25,9 @@ AML, sancțiuni, SCA, reconciliere și control operațional.
 ## Configurare Supabase
 
 1. Creează un proiect Supabase.
-2. Rulează `supabase/migrations/001_black_finance_mvp.sql` în SQL Editor.
+2. Rulează, în ordine, toate fișierele din `supabase/migrations/` în SQL Editor.
+   Dacă baza exista deja, rulează cel puțin
+   `002_balance_and_international_pending.sql`.
 3. În Supabase Auth dezactivează public sign-up dacă accesul va fi doar prin
    invitație.
 4. Adaugă în Vercel:
@@ -62,7 +66,8 @@ Configurația `vercel.json` folosește builderul Next.js standard.
 - Portofoliu cu sold și ultimele tranzacții;
 - rapoarte și istoric;
 - transfer către client după username sau e-mail;
-- transfer IBAN în așteptare;
+- transfer IBAN internațional în așteptare, cu rezervarea soldului;
+- listă persistentă „Transferuri în așteptare”;
 - produse demonstrative;
 - activare amprentă din `Mai multe → Securitate și login`;
 - deconectare.

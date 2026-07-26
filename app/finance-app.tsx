@@ -53,7 +53,7 @@ type Transaction = {
 
 const CURRENT_ACCOUNT_IBAN = "RO36HOMB0000992005123456789";
 const INITIAL_BALANCE = 128_744.16;
-const DEMO_STATE_KEY = "home-bank-demo-state-v2";
+const DEMO_STATE_KEY = "home-bank-demo-state-v3";
 
 const DEMO_TRANSACTIONS: Transaction[] = [
   {
@@ -684,12 +684,18 @@ function ReportsScreen({
 }
 
 function PaymentsScreen({
+  transactions,
   onOpenTransfer,
   onLogout,
 }: {
+  transactions: Transaction[];
   onOpenTransfer: (kind: TransferKind) => void;
   onLogout: () => void;
 }) {
+  const pendingTransfers = transactions.filter(
+    (transaction) => transaction.type === "pending",
+  );
+
   return (
     <>
       <Header title="Plăți" onLogout={onLogout} />
@@ -752,6 +758,42 @@ function PaymentsScreen({
             <ChevronRight />
           </button>
         </div>
+      </section>
+
+      <section className="section pending-transfers-section">
+        <div className="section-title">
+          <span>TRANSFERURI ÎN AȘTEPTARE</span>
+          <small>{pendingTransfers.length}</small>
+        </div>
+        {pendingTransfers.length ? (
+          <div className="pending-transfers-list">
+            {pendingTransfers.map((transaction) => (
+              <article className="pending-transfer-row" key={transaction.id}>
+                <span className="round-icon amber">
+                  <Clock3 size={20} />
+                </span>
+                <div>
+                  <strong>{transaction.title}</strong>
+                  <small>{transaction.subtitle}</small>
+                  <time>{transaction.date}</time>
+                </div>
+                <b>{money(Math.abs(transaction.amount))} RON</b>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-pending-transfers">
+            <Check size={22} />
+            <div>
+              <strong>Nu există transferuri în așteptare</strong>
+              <small>Transferurile internaționale inițiate vor apărea aici.</small>
+            </div>
+          </div>
+        )}
+        <p className="pending-settlement-note">
+          Transferurile internaționale pot dura între 3 și 5 zile lucrătoare.
+          Sumele sunt rezervate și scăzute imediat din soldul disponibil.
+        </p>
       </section>
     </>
   );
@@ -1235,7 +1277,13 @@ function MobileApp({
       );
     }
     if (tab === "plati") {
-      return <PaymentsScreen onOpenTransfer={setTransfer} onLogout={onLogout} />;
+      return (
+        <PaymentsScreen
+          transactions={transactions}
+          onOpenTransfer={setTransfer}
+          onLogout={onLogout}
+        />
+      );
     }
     if (tab === "produse") return <ProductsScreen onLogout={onLogout} />;
     if (tab === "mai-multe") {

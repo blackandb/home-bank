@@ -23,7 +23,7 @@ create table if not exists public.finance_accounts (
   account_name text not null default 'Cont Curent',
   iban text not null unique,
   currency text not null default 'RON' check (currency = 'RON'),
-  ledger_balance numeric(18,2) not null default 130000.00
+  ledger_balance numeric(18,2) not null default 128744.16
     check (ledger_balance >= 0),
   reserved_balance numeric(18,2) not null default 0
     check (reserved_balance >= 0),
@@ -170,7 +170,7 @@ begin
     'Cont Curent',
     public.finance_make_demo_iban(new.id),
     'RON',
-    130000.00
+    128744.16
   )
   on conflict (owner_id, currency) do nothing;
 
@@ -202,7 +202,7 @@ select
   'Cont Curent',
   public.finance_make_demo_iban(p.user_id),
   'RON',
-  130000.00
+  128744.16
 from public.finance_profiles p
 on conflict (owner_id, currency) do nothing;
 
@@ -373,8 +373,9 @@ begin
       );
   else
     if p_recipient_iban is null
-      or upper(replace(p_recipient_iban, ' ', '')) !~ '^RO[0-9]{2}[A-Z0-9]{20}$' then
-      raise exception 'A valid Romanian IBAN is required';
+      or upper(regexp_replace(p_recipient_iban, '[^A-Za-z0-9]', '', 'g'))
+        !~ '^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$' then
+      raise exception 'A valid international IBAN is required';
     end if;
 
     update public.finance_accounts
@@ -421,4 +422,3 @@ grant select on public.finance_accounts to authenticated;
 grant select on public.finance_transfers to authenticated;
 grant select on public.finance_transactions to authenticated;
 grant select, insert, update, delete on public.finance_passkeys to authenticated;
-

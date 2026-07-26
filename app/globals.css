@@ -1471,6 +1471,111 @@ small {
   letter-spacing: 0.07em;
 }
 
+.pending-transfers-section {
+  margin-top: 22px;
+  padding-bottom: 12px;
+}
+
+.pending-transfers-section .section-title small {
+  display: grid;
+  min-width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff2dc;
+  color: #9c5800;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pending-transfers-list {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.pending-transfer-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 14px;
+}
+
+.pending-transfer-row + .pending-transfer-row {
+  border-top: 1px solid var(--line);
+}
+
+.round-icon.amber {
+  background: #fff2dc;
+  color: #b76700;
+}
+
+.pending-transfer-row div {
+  min-width: 0;
+}
+
+.pending-transfer-row strong,
+.pending-transfer-row small,
+.pending-transfer-row time {
+  display: block;
+}
+
+.pending-transfer-row strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pending-transfer-row small,
+.pending-transfer-row time {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.pending-transfer-row b {
+  color: #a45d00;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.empty-pending-transfers {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px 15px;
+  background: #fff;
+  color: #16833f;
+}
+
+.empty-pending-transfers strong,
+.empty-pending-transfers small {
+  display: block;
+}
+
+.empty-pending-transfers strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.empty-pending-transfers small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.pending-settlement-note {
+  margin: 12px 3px 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
 .toast {
   position: fixed;
   z-index: 200;
