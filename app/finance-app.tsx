@@ -58,15 +58,29 @@ type Transaction = {
 
 const CURRENT_ACCOUNT_IBAN = "RO36HOMB0000992005123456789";
 const INITIAL_BALANCE = 128_744.16;
-const DEMO_STATE_KEY = "home-bank-demo-state-v4";
+// Versioned local ledger. Advancing the key performs the requested one-time
+// reset without affecting any future transfers created after this release.
+const DEMO_STATE_KEY = "home-bank-demo-state-v6";
+const LEGACY_DEMO_STATE_KEYS = [
+  "home-bank-demo-state-v4",
+  "home-bank-demo-state-v5",
+];
 
 const DEMO_TRANSACTIONS: Transaction[] = [
+  {
+    id: "omv-brasov-01",
+    title: "OMV BRAȘOV",
+    subtitle: "Achiziție card",
+    amount: -119.68,
+    date: "27 IUL · 11:25",
+    type: "out",
+  },
   {
     id: "atm-01",
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "25 IUL · 18:42",
+    date: "25 IUL · 18:03",
     type: "in",
   },
   {
@@ -74,7 +88,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "24 IUL · 17:16",
+    date: "25 IUL · 17:31",
     type: "in",
   },
   {
@@ -82,7 +96,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "23 IUL · 19:08",
+    date: "25 IUL · 16:58",
     type: "in",
   },
   {
@@ -90,7 +104,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "22 IUL · 16:35",
+    date: "25 IUL · 16:20",
     type: "in",
   },
   {
@@ -98,7 +112,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "21 IUL · 18:11",
+    date: "25 IUL · 15:42",
     type: "in",
   },
   {
@@ -106,7 +120,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     title: "ATM BUCUREȘTI VICTORIEI",
     subtitle: "Depunere numerar · ATM",
     amount: 4950,
-    date: "20 IUL · 15:52",
+    date: "25 IUL · 15:01",
     type: "in",
   },
 ];
@@ -1243,6 +1257,9 @@ function MobileApp({
   const [biometricMessage, setBiometricMessage] = useState("");
 
   useEffect(() => {
+    for (const legacyKey of LEGACY_DEMO_STATE_KEYS) {
+      localStorage.removeItem(legacyKey);
+    }
     const saved = localStorage.getItem(DEMO_STATE_KEY);
     if (!saved) return;
     try {
@@ -1311,9 +1328,11 @@ function MobileApp({
               subtitle: row.description || "Tranzacție",
               amount:
                 Number(row.amount) * (row.direction === "debit" ? -1 : 1),
-              date: new Date(row.created_at).toLocaleDateString("ro-RO", {
+              date: new Date(row.created_at).toLocaleString("ro-RO", {
                 day: "2-digit",
                 month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
               }),
               type:
                 row.status === "pending"

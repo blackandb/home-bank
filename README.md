@@ -34,9 +34,13 @@ AML, sancțiuni, SCA, reconciliere și control operațional.
 1. Creează un proiect Supabase.
 2. Rulează, în ordine, toate fișierele din `supabase/migrations/` în SQL Editor.
    Dacă baza exista deja, rulează și
-   `003_payment_details_and_one_time_reset.sql`. Resetarea soldului și ștergerea
-   celor două transferuri demo sunt protejate de un marker și se execută o
-   singură dată.
+   `003_payment_details_and_one_time_reset.sql`,
+   `004_remove_latest_test_payment_and_reset.sql`, apoi
+   `005_restore_atm_history_and_clear_transfers.sql`. Ultima migrare golește
+   integral transferurile de test, elimină plata de 100 RON, restaurează cele
+   șase depuneri ATM din 25 iulie și adaugă achiziția OMV Brașov din 27 iulie.
+   Soldul este resetat o singură dată la **128.744,16 RON**. Fiecare resetare
+   este protejată de un marker și nu afectează transferurile create ulterior.
 3. În Supabase Auth dezactivează public sign-up dacă accesul va fi doar prin
    invitație.
 4. Adaugă în Vercel:
@@ -77,6 +81,7 @@ Configurația `vercel.json` folosește builderul Next.js standard.
 - transfer către client după username sau e-mail;
 - transfer IBAN în așteptare, cu beneficiar, referință și rezervarea soldului;
 - listă persistentă „Transferuri în așteptare”;
+- registrul transferurilor pornește gol după migrarea finală de curățare;
 - pagină de detalii pentru transfer, cu statusul procesării și termenul estimat;
 - produse demonstrative;
 - activare amprentă din `Mai multe → Securitate și login`;
