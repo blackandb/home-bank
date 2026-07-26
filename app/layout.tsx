@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BLACK& Finance",
+  title: "Home Bank",
   description:
-    "MVP financiar mobil BLACK& pentru portofoliu, rapoarte și transferuri securizate.",
-  applicationName: "BLACK& Finance",
+    "Aplicația financiară mobilă Home Bank pentru portofoliu, rapoarte și transferuri securizate.",
+  applicationName: "Home Bank",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "BLACK& Finance",
+    title: "Home Bank",
   },
   formatDetection: {
     telephone: false,

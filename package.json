@@ -1,5 +1,5 @@
 {
-  "name": "black-finance-mobile-mvp",
+  "name": "home-bank-mobile-mvp",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -42,5 +42,5 @@
     "wrangler": "4.92.0"
   },
   "type": "module",
-  "displayName": "BLACK& Financial Mobile MVP"
+  "displayName": "Home Bank Mobile MVP"
 }

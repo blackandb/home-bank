@@ -1,4 +1,4 @@
-const CACHE = "black-finance-v2";
+const CACHE = "home-bank-v3";
 const CORE = [
   "/",
   "/manifest.webmanifest",

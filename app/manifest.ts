@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "BLACK& Finance",
-    short_name: "BLACK&",
+    name: "Home Bank",
+    short_name: "Home Bank",
     description:
       "Portofoliu financiar, rapoarte și transferuri într-o experiență mobilă securizată.",
     start_url: "/",

@@ -1,11 +1,11 @@
-# BLACK& Finance — Mobile PWA MVP
+# Home Bank — Mobile PWA MVP
 
 Un MVP financiar mobile-only în limba română, inspirat de interfața furnizată:
 
 - autentificare cu utilizator/e-mail și parolă prin Supabase Auth;
 - deblocare biometrică WebAuthn pe dispozitiv după prima autentificare;
 - sold inițial demonstrativ de **130.000 RON**;
-- transfer intern atomic între doi clienți BLACK&;
+- transfer intern atomic între doi clienți Home Bank;
 - transfer către IBAN în starea **În așteptare**;
 - portofoliu, rapoarte, plăți, produse și setări;
 - PWA instalabilă cu service worker și manifest;
@@ -66,4 +66,3 @@ Configurația `vercel.json` folosește builderul Next.js standard.
 - produse demonstrative;
 - activare amprentă din `Mai multe → Securitate și login`;
 - deconectare.
-

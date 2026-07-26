@@ -136,13 +136,15 @@ input:focus-visible {
 .brand {
   display: inline-flex;
   align-items: baseline;
+  gap: 5px;
   font-size: 27px;
   font-weight: 900;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.035em;
 }
 
 .brand b {
   color: var(--orange);
+  font-weight: 900;
 }
 
 .eyebrow {

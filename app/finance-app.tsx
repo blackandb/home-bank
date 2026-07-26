@@ -113,9 +113,9 @@ function base64ToBytes(value: string) {
 
 function Brand() {
   return (
-    <div className="brand" aria-label="BLACK& Finance">
-      <span>BLACK</span>
-      <b>&</b>
+    <div className="brand" aria-label="Home Bank">
+      <span>HOME</span>
+      <b>BANK</b>
     </div>
   );
 }
@@ -131,7 +131,7 @@ function DesktopBlocked() {
         <p className="eyebrow">APLICAȚIE FINANCIARĂ MOBILĂ</p>
         <h1>Disponibilă exclusiv pe telefon.</h1>
         <p>
-          Din motive de securitate, BLACK& Finance nu poate fi utilizată de pe
+          Din motive de securitate, Home Bank nu poate fi utilizată de pe
           desktop. Deschide această adresă pe telefon și instalează aplicația.
         </p>
         <div className="secure-line">
@@ -165,11 +165,11 @@ function InstallScreen({
   return (
     <main className="install-screen">
       <div className="install-card">
-        <div className="app-mark">B&</div>
-        <p className="eyebrow">BLACK& FINANCIAL MVP</p>
+        <div className="app-mark">HB</div>
+        <p className="eyebrow">HOME BANK FINANCIAL MVP</p>
         <h1>Finanțele tale, în aplicația mobilă.</h1>
         <p>
-          Instalează BLACK& Finance pe ecranul principal pentru acces securizat,
+          Instalează Home Bank pe ecranul principal pentru acces securizat,
           notificări și autentificare biometrică.
         </p>
         <button className="primary-button install-button" onClick={requestInstall}>
@@ -197,7 +197,7 @@ function InstallScreen({
                 <ol>
                   <li>Deschide meniul browserului.</li>
                   <li>Alege „Instalează aplicația” sau „Adaugă pe ecranul principal”.</li>
-                  <li>Confirmă instalarea BLACK& Finance.</li>
+                  <li>Confirmă instalarea Home Bank.</li>
                 </ol>
               </>
             )}
@@ -264,7 +264,7 @@ function Login({
         .select("full_name")
         .eq("user_id", data.user.id)
         .maybeSingle();
-      onSuccess(profile?.full_name || data.user.user_metadata?.full_name || "Client BLACK&");
+      onSuccess(profile?.full_name || data.user.user_metadata?.full_name || "Client Home Bank");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Autentificarea a eșuat.");
     } finally {
@@ -319,7 +319,7 @@ function Login({
       <section className="login-card">
         <p className="eyebrow">ACCES SECURIZAT</p>
         <h1>Bine ai venit.</h1>
-        <p>Accesează portofoliul financiar BLACK&.</p>
+        <p>Accesează portofoliul financiar Home Bank.</p>
         <form onSubmit={passwordLogin}>
           <label>
             Utilizator sau e-mail
@@ -427,7 +427,7 @@ function HomeScreen({
             <div className="flag">🇷🇴</div>
             <div>
               <strong>Cont Curent</strong>
-              <small>RO36BLACK0000992005123456789</small>
+              <small>RO36HOMB0000992005123456789</small>
             </div>
             <ChevronRight size={20} />
           </div>
@@ -519,7 +519,7 @@ function ReportsScreen({
         <div className="flag">🇷🇴</div>
         <div>
           <strong>Cont Curent</strong>
-          <small>RO36BLACK0000992005123456789</small>
+          <small>RO36HOMB0000992005123456789</small>
         </div>
         <b>{money(balance)} RON</b>
         <ChevronRight size={18} />
@@ -597,7 +597,7 @@ function PaymentsScreen({
             <span className="avatar">DC</span>
             <span>
               <strong>Dascălu Constantin Cătălin</strong>
-              <small>Client BLACK& · transfer instant</small>
+              <small>Client Home Bank · transfer instant</small>
             </span>
             <ChevronRight />
           </button>
@@ -606,7 +606,7 @@ function PaymentsScreen({
               <ContactRound />
             </span>
             <span>
-              <strong>Contact BLACK&</strong>
+              <strong>Contact Home Bank</strong>
               <small>Contact rapid</small>
             </span>
             <ChevronRight />
@@ -616,7 +616,7 @@ function PaymentsScreen({
               <Send />
             </span>
             <span>
-              <strong>BLACK& Go</strong>
+              <strong>Home Bank Go</strong>
               <small>Plăți și beneficii</small>
             </span>
             <ChevronRight />
@@ -640,13 +640,13 @@ function ProductsScreen({ onLogout }: { onLogout: () => void }) {
       <article className="refer-card">
         <div className="refer-art">
           <div className="gift-grid">
-            {["B", "&", "★", "RON", "GO", "+", "↗", "€", "B&"].map((value) => (
+            {["H", "B", "★", "RON", "GO", "+", "↗", "€", "HB"].map((value) => (
               <span key={value}>{value}</span>
             ))}
           </div>
         </div>
         <div className="refer-copy">
-          <strong>Recomandă BLACK& prietenilor</strong>
+          <strong>Recomandă Home Bank prietenilor</strong>
           <p>Tu câștigi 200 de lei, ei se bucură de oferte.</p>
         </div>
         <div className="carousel-dots">
@@ -693,9 +693,9 @@ function MoreScreen({
   biometricMessage: string;
 }) {
   const tiles = [
-    { icon: ContactRound, title: "Contact BLACK&", subtitle: "" },
+    { icon: ContactRound, title: "Contact Home Bank", subtitle: "" },
     { icon: UserRound, title: "Datele mele", subtitle: "" },
-    { icon: Send, title: "BLACK& Go", subtitle: "Plăți și beneficii" },
+    { icon: Send, title: "Home Bank Go", subtitle: "Plăți și beneficii" },
     { icon: LockKeyhole, title: "Securitate și login", subtitle: "" },
   ];
   return (
@@ -728,7 +728,7 @@ function MoreScreen({
         </button>
       </div>
       <div className="legal-note">
-        BLACK& Finance MVP · Serviciile bancare reale nu sunt încă active.
+        Home Bank MVP · Serviciile bancare reale nu sunt încă active.
       </div>
     </>
   );
@@ -784,7 +784,7 @@ function TransferSheet({
           p_recipient_iban:
             kind === "iban" ? recipient.replaceAll(" ", "").toUpperCase() : null,
           p_amount: numericAmount,
-          p_description: description.trim() || "Transfer BLACK&",
+          p_description: description.trim() || "Transfer Home Bank",
           p_idempotency_key: idempotencyKey,
         });
         if (error) throw error;
@@ -799,7 +799,7 @@ function TransferSheet({
               : `TRANSFER IBAN ${recipient.slice(-6).toUpperCase()}`,
           subtitle:
             kind === "client"
-              ? "Transfer intern BLACK&"
+              ? "Transfer intern Home Bank"
               : "Transfer extern · în așteptare",
           amount: -numericAmount,
           date: "ASTĂZI",
@@ -997,10 +997,10 @@ function MobileApp({
       const credential = (await navigator.credentials.create({
         publicKey: {
           challenge: crypto.getRandomValues(new Uint8Array(32)),
-          rp: { name: "BLACK& Finance" },
+          rp: { name: "Home Bank" },
           user: {
             id: userId,
-            name: "client-black-finance",
+            name: "client-home-bank",
             displayName: profileName,
           },
           pubKeyCredParams: [
@@ -1177,7 +1177,7 @@ export default function FinanceApp() {
   if (!ready) {
     return (
       <main className="loading-screen">
-        <div className="app-mark pulse">B&</div>
+        <div className="app-mark pulse">HB</div>
         <p>Se securizează aplicația…</p>
       </main>
     );
