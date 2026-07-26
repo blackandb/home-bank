@@ -6,7 +6,7 @@ Un MVP financiar mobile-only în limba română, inspirat de interfața furnizat
 - deblocare biometrică WebAuthn pe dispozitiv după prima autentificare;
 - sold inițial demonstrativ de **128.744,16 RON**;
 - transfer intern atomic între doi clienți Home Bank;
-- transfer către orice IBAN internațional valid în starea **În așteptare**;
+- transfer către orice IBAN valid, local sau extern, în starea **În așteptare**;
 - rezervarea imediată a sumei și scăderea ei din soldul disponibil;
 - registru persistent pentru toate transferurile în așteptare;
 - portofoliu, rapoarte, plăți, produse și setări;
@@ -33,8 +33,10 @@ AML, sancțiuni, SCA, reconciliere și control operațional.
 
 1. Creează un proiect Supabase.
 2. Rulează, în ordine, toate fișierele din `supabase/migrations/` în SQL Editor.
-   Dacă baza exista deja, rulează cel puțin
-   `002_balance_and_international_pending.sql`.
+   Dacă baza exista deja, rulează și
+   `003_payment_details_and_one_time_reset.sql`. Resetarea soldului și ștergerea
+   celor două transferuri demo sunt protejate de un marker și se execută o
+   singură dată.
 3. În Supabase Auth dezactivează public sign-up dacă accesul va fi doar prin
    invitație.
 4. Adaugă în Vercel:
@@ -73,8 +75,9 @@ Configurația `vercel.json` folosește builderul Next.js standard.
 - Portofoliu cu sold și ultimele tranzacții;
 - rapoarte și istoric;
 - transfer către client după username sau e-mail;
-- transfer IBAN internațional în așteptare, cu rezervarea soldului;
+- transfer IBAN în așteptare, cu beneficiar, referință și rezervarea soldului;
 - listă persistentă „Transferuri în așteptare”;
+- pagină de detalii pentru transfer, cu statusul procesării și termenul estimat;
 - produse demonstrative;
 - activare amprentă din `Mai multe → Securitate și login`;
 - deconectare.
